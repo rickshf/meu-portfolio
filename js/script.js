@@ -17,7 +17,7 @@ for (let x = 0; x < columns; x++) {
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    columns = canvas.width / font_size;
+    columns = Math.floor(canvas.width / font_size);
     drops.length = columns; // Ajusta o array de drops
     for (let x = 0; x < columns; x++) {
         if (drops[x] === undefined) {
@@ -132,3 +132,94 @@ window.addEventListener('load', highlightNav); // Highlight on page load
 //     color: var(--cor-primaria); /* Ou outra cor que destaque */
 //     font-weight: 700;
 // }
+
+
+// --- 4. LÓGICA DO BLOG ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    const postsListContainer = document.getElementById('blog-posts-list');
+    const modal = document.getElementById('post-modal');
+    const modalContent = document.getElementById('post-content');
+    const closeModalBtn = document.getElementById('close-modal');
+
+    marked.setOptions({
+        highlight: function(code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
+        }
+    });
+    // Lista de posts. Adicione novos posts aqui.
+    const posts = [
+        {
+            title: 'Bem-vindo ao Meu Blog!',
+            description: 'Uma introdução sobre os objetivos deste espaço.',
+            file: 'posts/primeiro-post.md'
+        },
+        {
+            title: 'Tecnologias que Estou Estudando',
+            description: 'Um olhar sobre as tecnologias que estou explorando atualmente.',
+            file: 'posts/tecnologias-que-estou-estudando.md'
+        }
+    ];
+
+    // Função para carregar e exibir a lista de posts
+    function renderPostsList() {
+        if (!postsListContainer) return;
+        
+        posts.forEach(post => {
+            const postCard = document.createElement('div');
+            postCard.className = 'card-post reveal'; // Reutilizando a classe de animação
+            postCard.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.description}</p>
+            `;
+            postCard.addEventListener('click', () => openPost(post.file));
+            postsListContainer.appendChild(postCard);
+        });
+        
+        // Re-observar os novos elementos para a animação de scroll
+        const newRevealElements = postsListContainer.querySelectorAll('.reveal');
+        newRevealElements.forEach(element => {
+            observer.observe(element);
+        });
+    }
+
+    // Função para buscar o conteúdo do post e abrir o modal
+    async function openPost(filePath) {
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error('Não foi possível carregar o post.');
+            
+            const markdownText = await response.text();
+            
+            // Converter Markdown para HTML usando a lib 'marked'
+            // Sanitizar o HTML para evitar ataques XSS usando 'DOMPurify'
+            modalContent.innerHTML = DOMPurify.sanitize(marked.parse(markdownText));
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Impede o scroll do fundo
+        } catch (error) {
+            console.error('Erro ao abrir o post:', error);
+            modalContent.innerHTML = '<p>Ocorreu um erro ao carregar o conteúdo. Tente novamente mais tarde.</p>';
+            modal.classList.add('active');
+        }
+    }
+
+    // Função para fechar o modal
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restaura o scroll
+    }
+
+    // Event Listeners do Modal
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        // Fecha o modal se clicar no fundo (overlay)
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Inicia o processo
+    renderPostsList();
+});

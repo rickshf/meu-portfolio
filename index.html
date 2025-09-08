@@ -6,6 +6,16 @@
     <title>Portfólio - Henrique Almeida</title>
     <link rel="stylesheet" href="lib/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="imagens/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="imagens/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="imagens/favicon-16x16.png">
+    <link rel="icon" href="imagens/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js" defer></script>
 </head>
 <body>
  <canvas id="matrix-canvas"></canvas>
@@ -15,6 +25,7 @@
                 <li><a href="#inicio">Início</a></li>
                 <li><a href="#sobre">Sobre</a></li>
                 <li><a href="#projetos">Projetos</a></li>
+                <li><a href="#blog">Blog</a></li>
                 <li><a href="#contato">Contato</a></li>
             </ul>
         </nav>
@@ -95,6 +106,13 @@
             </div>
         </section>
 
+        <section id="blog">
+            <h2>Blog</h2>
+            <p>Um espaço para compartilhar ideias, estudos e projetos em andamento.</p>
+            <div id="blog-posts-list" class="container-projetos">
+                </div>
+        </section>
+
         <section id="contato">
             <h2>Vamos Conversar?</h2>
             <p>Estou sempre aberto a novas oportunidades e conexões. Entre em contato!</p>
@@ -115,7 +133,15 @@
     <footer>
         &copy; 2025 - Henrique Almeida. Todos os direitos reservados.
     </footer>
-	<a href="#" id="scrollTopBtn" title="Voltar ao topo">&#8679;</a>
-	<script src="js/script.js"></script>
+
+    <div id="post-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal" class="modal-close-btn">&times;</button>
+            <div id="post-content"></div>
+        </div>
+    </div>
+
+    <a href="#" id="scrollTopBtn" title="Voltar ao topo">&#8679;</a>
+    <script src="js/script.js"></script>
 </body>
 </html>
